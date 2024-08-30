@@ -1,24 +1,15 @@
+import 'dotenv/config.js';
+
 import express from 'express';
+import multer from 'multer';
+
 const servidor = express();
 servidor.use( express.json() );
 
-servidor.get('/helloworld', (req, resp) => {
-    resp.send('Hello World')
-});
+let uploadPerfil = multer({ dest: './storage/perfil' })
 
 
-servidor.get('/mensagem/boasvindas/:nome', (req, resp) => {
-    let nome = req.params.nome
-    resp.send(`Olá, seja bem-vindo(a) ${nome}!!!`)
-});
 
-
-servidor.get('/calculadora/somar', (req, resp) => {
-    let n1 = Number(req.query.n1)
-    let n2 = Number(req.query.n2)
-    let soma = n1 + n2
-    resp.send(`${n1} + ${n2} = ${soma}`)
-});
 
 
 servidor.post('/media', (req, resp) => {
@@ -28,7 +19,6 @@ servidor.post('/media', (req, resp) => {
     let media = (n1 + n2 + n3) /3
     resp.send(`A média é ${media}`)
 });
-
 
 servidor.post('/dobro', (req, resp) => {
     let nums = req.body.numeros
@@ -40,7 +30,6 @@ servidor.post('/dobro', (req, resp) => {
 
     resp.send('O dobro dos numeros é ' + nums2)
 });
-
 
 servidor.post('/loja/pedido', (req, resp) => {
     let total = req.body.total
@@ -56,7 +45,6 @@ servidor.post('/loja/pedido', (req, resp) => {
 
     resp.send(`Total: R$ ${total.toFixed(2)}`)
 });
-
 
 servidor.post('/loja/pedido/completo', (req, resp) => {
     let parcelas = req.body.parcelas
@@ -78,6 +66,19 @@ servidor.post('/loja/pedido/completo', (req, resp) => {
     resp.send(`O total é R$ ${total.toFixed(2)}`)
 });
 
+servidor.post('/perfil/capa', uploadPerfil.single('imagem'), (req, resp) => {
+    let caminho = req.file.path
+    let extensao = req.file.mimetype
+    let nome = req.file.originalname
 
-servidor.listen(5001,
-    () => console.log('---> API subiu com sucesso na porta 5001!'));
+    resp.send({
+        caminho: caminho,
+        extensao: extensao,
+        nome: nome
+    })
+})
+
+const PORTA = process.env.PORTA;
+
+servidor.listen(PORTA,
+    () => console.log(`---> API subiu com sucesso na porta ${PORTA}!`));
