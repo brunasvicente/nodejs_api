@@ -5,7 +5,14 @@ import { validarBoasVindas } from "../validation/mensagem/boasvindasValidation.j
 
 
 endpoints.get('/helloworld', (req, resp) => {
-    resp.send('Hello World')
+    try{
+        resp.send('Hello World')
+    }
+    catch(err) {
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
 });
 
 endpoints.get('/mensagem/boasvindas/:nome', (req, resp) => {
