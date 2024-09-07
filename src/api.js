@@ -2,13 +2,12 @@ import 'dotenv/config.js';
 import express from 'express';
 import cors from 'cors';
 
-import rotas from './rotas';
+import rotas from './rotas.js';
 
 const servidor = express();
 servidor.use( express.json() );
 servidor.use(cors())
 
-//Rotas (Controllers) de todos os Endpoints
 rotas(servidor);
 
 const PORTA = process.env.PORTA;
